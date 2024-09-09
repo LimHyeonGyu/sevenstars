@@ -1,50 +1,62 @@
 package deu.ex.sevenstars.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name="tbl_product")
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@ToString
+@Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Product {
-    private final UUID productId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long productId;
+
     private String productName;
+
+    @Enumerated(EnumType.STRING)
     private Category category;
+
     private long price;
+
     private String description;
-    private final LocalDateTime createdAt;
+
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Product(UUID productId, String productName, Category category, long price) {
-        this.productId = productId;
-        this.productName = productName;
-        this.category = category;
-        this.price = price;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
+    @OneToMany(mappedBy = "product")
+    private List<OrderItem> orderItems = new ArrayList<>();
+
 
     public void changeDescription(String description) {
         this.description = description;
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void changeProductName(String productName) {
         this.productName = productName;
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void changeCategory(Category category) {
         this.category = category;
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void changePrice(long price) {
         this.price = price;
-        this.updatedAt = LocalDateTime.now();
     }
 }
