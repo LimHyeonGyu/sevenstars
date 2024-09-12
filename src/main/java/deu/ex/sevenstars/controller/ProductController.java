@@ -44,6 +44,7 @@ public class ProductController {
             @RequestPart("productDTO") String productDTOJson,
             @RequestPart("imageFile") MultipartFile imageFile) throws JsonProcessingException {
 
+
         ObjectMapper objectMapper = new ObjectMapper();
         ProductDTO productDTO = objectMapper.readValue(productDTOJson, ProductDTO.class);
 
